@@ -4,6 +4,7 @@ import '../blocs/album_bloc.dart';
 import '../blocs/album_event.dart';
 import '../blocs/album_state.dart';
 import '../../domain/repositories/album_repository.dart';
+import '../../data/models/album_with_photo.dart';
 import 'package:go_router/go_router.dart';
 
 class AlbumListScreen extends StatelessWidget {
@@ -20,13 +21,30 @@ class AlbumListScreen extends StatelessWidget {
             if (state is AlbumLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is AlbumLoaded) {
+              final albums = state.albums;
+
               return ListView.builder(
-                itemCount: state.albums.length,
+                itemCount: albums.length,
                 itemBuilder: (context, index) {
-                  final album = state.albums[index];
+                  final albumWithPhoto = albums[index];
+                  final album = albumWithPhoto.album;
+                  final photo = albumWithPhoto.photo;
+
+                  // Debug print
+                  print("Album: ${album.title}, Photo: ${photo?.thumbnailUrl}");
+
                   return ListTile(
+                    leading: photo != null
+                        ? Image.network(
+                      photo.thumbnailUrl,
+                      width: 50,
+                      height: 50,
+                      errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image),
+                    )
+                        : const Icon(Icons.photo),
                     title: Text(album.title),
-                    onTap: () => GoRouter.of(context).push('/details', extra: album),
+                    subtitle: Text("Album ID: ${album.id}"),
+                    onTap: () => GoRouter.of(context).push('/details', extra: albumWithPhoto),
                   );
                 },
               );

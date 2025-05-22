@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../data/models/album_model.dart';
+import '../../data/models/album_with_photo.dart';
 
 abstract class AlbumState extends Equatable {
   @override
@@ -11,7 +11,7 @@ class AlbumInitial extends AlbumState {}
 class AlbumLoading extends AlbumState {}
 
 class AlbumLoaded extends AlbumState {
-  final List<Album> albums;
+  final List<AlbumWithPhoto> albums;
 
   AlbumLoaded(this.albums);
 
