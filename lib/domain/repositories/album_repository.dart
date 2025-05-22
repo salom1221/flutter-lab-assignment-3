@@ -1,20 +1,17 @@
-import 'package:dio/dio.dart';
 import '../../data/models/album_model.dart';
 import '../../data/models/photo_model.dart';
 import '../../data/models/album_with_photo.dart';
-import '../../data/services/api_service.dart';
+import '../../data/services/http_service.dart';
 
 class AlbumRepository {
-  final ApiService apiService;
+  final HttpService service;
 
-  AlbumRepository({ApiService? service})
-      : apiService = service ?? ApiService(Dio());
+  AlbumRepository({HttpService? service}) : service = service ?? HttpService();
 
   Future<List<AlbumWithPhoto>> getAlbumsWithPhotos() async {
-    final albums = await apiService.getAlbums();
-    final photos = await apiService.getPhotos();
+    final albums = await service.getAlbums();
+    final photos = await service.getPhotos();
 
-    // Map albumId -> first matching photo
     final Map<int, Photo> albumPhotoMap = {
       for (var photo in photos) photo.albumId: photo
     };
