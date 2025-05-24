@@ -11,7 +11,7 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
     on<LoadAlbums>((event, emit) async {
       emit(AlbumLoading());
       try {
-        final albums = await repository.getAlbumsWithPhotos();
+        final albums = await repository.getAlbums();
         emit(AlbumLoaded(albums));
       } catch (e) {
         emit(AlbumError("Failed to load albums: $e"));

@@ -1,6 +1,5 @@
 import '../../data/models/album_model.dart';
 import '../../data/models/photo_model.dart';
-import '../../data/models/album_with_photo.dart';
 import '../../data/services/http_service.dart';
 
 class AlbumRepository {
@@ -8,16 +7,10 @@ class AlbumRepository {
 
   AlbumRepository({HttpService? service}) : service = service ?? HttpService();
 
-  Future<List<AlbumWithPhoto>> getAlbumsWithPhotos() async {
-    final albums = await service.getAlbums();
-    final photos = await service.getPhotos();
+  Future<List<Album>> getAlbums() async => await service.getAlbums();
 
-    final Map<int, Photo> albumPhotoMap = {
-      for (var photo in photos) photo.albumId: photo
-    };
-
-    return albums
-        .map((album) => AlbumWithPhoto(album: album, photo: albumPhotoMap[album.id]))
-        .toList();
+  Future<List<Photo>> getPhotosByAlbumId(int albumId) async {
+    final allPhotos = await service.getPhotos();
+    return allPhotos.where((photo) => photo.albumId == albumId).toList();
   }
 }
